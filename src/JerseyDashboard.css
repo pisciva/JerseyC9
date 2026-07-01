@@ -1,0 +1,517 @@
+/* JerseyDashboard.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fcfdff;
+    /* Menyamakan warna background bawaan browser dengan warna dasar gradasi */
+}
+
+.jd-container {
+    --ink: #1b1b23;
+    --muted: rgba(27, 27, 35, 0.55);
+    --muted-2: rgba(27, 27, 35, 0.38);
+    --accent: #6d5ef0;
+    --glass: rgba(255, 255, 255, 0.42);
+    --glass-strong: rgba(255, 255, 255, 0.62);
+    --glass-line: rgba(255, 255, 255, 0.75);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.14);
+
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.jd-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(circle at 15% 0%, rgba(191, 214, 255, 0.55) 0%, transparent 55%),
+        radial-gradient(circle at 100% 20%, rgba(203, 222, 255, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 50% 100%, rgba(214, 229, 255, 0.35) 0%, transparent 55%),
+        #fcfdff;
+}
+
+.jd-wrap {
+    width: 100%;
+    padding: 28px 32px 72px;
+    max-width: 100%;
+}
+
+@media (max-width: 640px) {
+    .jd-wrap {
+        padding: 18px 16px 56px;
+    }
+}
+
+.jd-glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid var(--glass-line);
+    border-radius: 22px;
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.jd-header {
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.jd-toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+}
+
+.jd-search {
+    position: relative;
+    flex: 1 1 200px;
+    min-width: 160px;
+}
+
+.jd-search input {
+    width: 100%;
+    background: var(--glass-strong);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 14px;
+    padding: 9px 12px 9px 34px;
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    font-family: inherit;
+    transition: box-shadow 0.15s;
+}
+
+.jd-search input:focus {
+    box-shadow: 0 0 0 3px rgba(109, 94, 240, 0.25);
+}
+
+.jd-search svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+}
+
+.jd-select {
+    background: var(--glass-strong);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+    color: var(--ink);
+    padding: 8px 26px 8px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: right 12px top 50%, right 7px top 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+.jd-select:focus {
+    box-shadow: 0 0 0 3px rgba(109, 94, 240, 0.25);
+}
+
+.jd-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(109, 94, 240, 0.14);
+    border: 1px solid rgba(109, 94, 240, 0.3);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 7px 13px;
+    transition: all 0.2s;
+}
+
+.jd-btn:hover {
+    background: rgba(109, 94, 240, 0.2);
+}
+
+.jd-count {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 0 6px 10px;
+}
+
+.jd-count strong {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.jd-table-wrap {
+    padding: 6px 10px 10px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+thead th {
+    text-align: left;
+    padding: 12px 12px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+thead th:hover {
+    color: var(--accent);
+}
+
+tbody td {
+    padding: 11px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+tbody tr {
+    transition: background 0.12s;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+tbody tr:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+tbody td:first-child {
+    color: var(--muted-2);
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+
+tbody td:last-child {
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
+
+.jd-th-inner {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.jd-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.jd-mono {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* --- Design Preview Hover Box --- */
+.jd-preview-float {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-line);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    z-index: 100;
+    width: 260px;
+    pointer-events: none;
+    animation: jd-fade-up 0.2s ease-out;
+}
+
+.jd-preview-float img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    background: #eee;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.jd-preview-float .jd-p-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 12px;
+    text-align: center;
+}
+
+.jd-preview-float .jd-p-sub {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 4px;
+}
+
+@keyframes jd-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Size Chart Modal --- */
+.jd-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.jd-modal-content {
+    background: #fff;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 680px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.jd-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.jd-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jd-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.jd-modal-close:hover {
+    background: #f0f0f0;
+    color: var(--ink);
+}
+
+.jd-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.jd-size-table-wrap h4 {
+    text-align: center;
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.jd-size-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.jd-size-table th {
+    padding: 12px 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.jd-size-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    font-weight: 600;
+}
+
+.jd-size-table tr:last-child td {
+    border-bottom: none;
+}
+
+.jd-size-table td:last-child {
+    border-right: none;
+}
+
+/* Table Colors */
+.jd-male-table th {
+    background-color: #000080;
+}
+
+/* Navy */
+.jd-female-table th {
+    background-color: #9932CC;
+}
+
+/* Purple */
+
+/* --- Mobile card view --- */
+.jd-cards {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    .jd-table-wrap {
+        display: none;
+    }
+
+    .jd-cards {
+        display: block;
+        padding: 8px;
+    }
+
+    .jd-card {
+        background: var(--glass-strong);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 18px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 18px rgba(31, 38, 135, 0.08);
+    }
+
+    .jd-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .jd-card-name {
+        font-weight: 700;
+        font-size: 14.5px;
+    }
+
+    .jd-card-num {
+        font-size: 16px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--accent);
+    }
+
+    .jd-card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 10px;
+        font-size: 12px;
+    }
+
+    .jd-card-grid-item label {
+        display: block;
+        color: var(--muted);
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 4px;
+    }
+
+    .jd-card-backname {
+        color: var(--muted-2);
+        font-size: 12.5px;
+    }
+
+    .jd-modal-body {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .jd-preview-float {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        width: auto;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px;
+    }
+
+    .jd-preview-float img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .jd-preview-float .jd-p-title {
+        margin-top: 0;
+        text-align: left;
+    }
+
+    .jd-preview-float .jd-p-sub {
+        text-align: left;
+    }
+}
+
+@keyframes jd-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.jd-spin {
+    animation: jd-spin 0.8s linear infinite;
+}

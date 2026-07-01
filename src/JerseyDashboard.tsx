@@ -574,7 +574,7 @@ export default function JerseyDashboard() {
                     <div>
                         <div className="jd-p-title">{activePreview.label}</div>
                         <div className="jd-p-sub">
-                            {previewItem?.name} &bull; {previewItem?.jerseyNumber || "No Num"}
+                            {previewItem?.name} &bull; {previewItem?.jerseyNumber || "No Num"} &bull; {previewItem?.size ? shortSize(previewItem.size) : "No Size"}
                         </div>
                     </div>
                 </div>

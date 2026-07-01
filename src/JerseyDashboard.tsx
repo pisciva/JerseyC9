@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import * as XLSX from "xlsx";
-import { Search, ArrowUpDown, ArrowUp, ArrowDown, X, AlertCircle, Loader2, Ruler, Image as ImageIcon } from "lucide-react";
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, X, AlertCircle, Loader2, Ruler } from "lucide-react";
 import "./JerseyDashboard.css"; // <-- Import CSS-nya di sini!
 
 const DATA_PATH = "/data/orders.xlsx";
@@ -385,8 +385,8 @@ export default function JerseyDashboard() {
             let av: string | number = a[sortKey];
             let bv: string | number = b[sortKey];
             if (sortKey === "id" || sortKey === "jerseyNumber") {
-                av = parseFloat(a[sortKey]) || 0;
-                bv = parseFloat(b[sortKey]) || 0;
+                av = parseFloat(String(a[sortKey])) || 0;
+                bv = parseFloat(String(b[sortKey])) || 0;
             } else {
                 av = (av || "").toString().toLowerCase();
                 bv = (bv || "").toString().toLowerCase();

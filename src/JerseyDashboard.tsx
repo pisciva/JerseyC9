@@ -136,8 +136,8 @@ function parseWorkbookToOrders(workbook: XLSX.WorkBook): JerseyOrder[] {
 }
 
 function shortGender(g: string): string {
-    if (g.startsWith("Men")) return "Men";
-    if (g.startsWith("Women")) return "Women";
+    if (g.startsWith("Men")) return "Men's Size";
+    if (g.startsWith("Women")) return "Women's Size";
     return g || "—";
 }
 
@@ -160,7 +160,7 @@ const COLUMNS: ColumnDef[] = [
     { key: "backName", label: "Back Name", sortable: true, width: "130px" },
     { key: "jerseyNumber", label: "No.", sortable: true, width: "60px" },
     { key: "orderType", label: "Order", sortable: true, width: "110px" },
-    { key: "gender", label: "Gender", sortable: true, width: "80px" },
+    { key: "gender", label: "Size Type", sortable: true, width: "95px" },
     { key: "size", label: "Size", sortable: true, width: "70px" },
     { key: "sleeve", label: "Sleeve", sortable: true, width: "80px" },
     { key: "color", label: "Color", sortable: true, width: "70px" },
@@ -176,12 +176,10 @@ const COLUMNS: ColumnDef[] = [
 type ColorRule = { match: string | string[]; bg: string; text: string };
 
 const COLOR_RULES: ColorRule[] = [
-    { match: "morning", bg: "#fef08a", text: "#854d0e" },     // Pagi: soft yellow cerah (matahari pagi)
-    { match: "afternoon", bg: "#fdba74", text: "#9a3412" },   // Siang: soft orange lebih pekat (matahari sore)
-
-    // --- Gender ---
-    { match: "men", bg: "#dbeafe", text: "#1d4ed8" },         // Cowok: soft blue
-    { match: "women", bg: "#fbcfe8", text: "#be185d" },       // Cewek: soft pink
+    { match: "morning", bg: "#fef08a", text: "#854d0e" },
+    { match: "afternoon", bg: "#fdba74", text: "#9a3412" },
+    { match: "women", bg: "#fbcfe8", text: "#be185d" },   // Women HARUS lebih atas dari Men
+    { match: "men", bg: "#dbeafe", text: "#1d4ed8" },      // Cewek: soft pink
 
     // --- Sleeve ---
     { match: "short", bg: "#fed7aa", text: "#c2410c" },       // Lengan pendek: soft orange
@@ -465,7 +463,7 @@ export default function JerseyDashboard() {
                                 {orderTypes.map(s => <option key={s} value={s}>{s === "All" ? "All Order Types" : s}</option>)}
                             </select>
                             <select className="jd-select" value={genderFilter} onChange={e => setGenderFilter(e.target.value)}>
-                                {genders.map(s => <option key={s} value={s}>{s === "All" ? "All Genders" : s}</option>)}
+                                {genders.map(s => <option key={s} value={s}>{s === "All" ? "All Size Types" : shortGender(s)}</option>)}
                             </select>
                             <select className="jd-select" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
                                 {sizes.map(s => <option key={s} value={s}>{s === "All" ? "All Sizes" : s}</option>)}
@@ -555,7 +553,7 @@ export default function JerseyDashboard() {
                                         <div className="jd-card-grid">
                                             <div className="jd-card-grid-item"><label>Session</label><CategoryBadge value={d.session} /></div>
                                             <div className="jd-card-grid-item"><label>Order</label><CategoryBadge value={shortOrderType(d.orderType)} /></div>
-                                            <div className="jd-card-grid-item"><label>Gender</label><CategoryBadge value={shortGender(d.gender)} /></div>
+                                            <div className="jd-card-grid-item"><label>Size Type</label><CategoryBadge value={shortGender(d.gender)} /></div>
                                             <div className="jd-card-grid-item"><label>Size</label><CategoryBadge value={shortSize(d.size)} /></div>
                                             <div className="jd-card-grid-item"><label>Sleeve</label><CategoryBadge value={shortSleeve(d.sleeve)} /></div>
                                             <div className="jd-card-grid-item"><label>Color</label><CategoryBadge value={d.color} /></div>
@@ -593,13 +591,13 @@ export default function JerseyDashboard() {
                         </div>
                         <div className="jd-modal-body">
                             <div className="jd-size-table-wrap">
-                                <h4>Laki-laki</h4>
+                                <h4>Men's Size</h4>
                                 <table className="jd-size-table jd-male-table">
                                     <thead>
                                         <tr>
                                             <th>SIZE</th>
-                                            <th>LEBAR</th>
-                                            <th>PANJANG</th>
+                                            <th>WIDTH</th>
+                                            <th>LENGTH</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -615,13 +613,13 @@ export default function JerseyDashboard() {
                             </div>
 
                             <div className="jd-size-table-wrap">
-                                <h4>Perempuan</h4>
+                                <h4>Women's Size</h4>
                                 <table className="jd-size-table jd-female-table">
                                     <thead>
                                         <tr>
                                             <th>SIZE</th>
-                                            <th>LEBAR</th>
-                                            <th>PANJANG</th>
+                                            <th>WIDTH</th>
+                                            <th>LENGTH</th>
                                         </tr>
                                     </thead>
                                     <tbody>

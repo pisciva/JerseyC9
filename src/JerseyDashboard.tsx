@@ -155,7 +155,7 @@ function shortOrderType(o: string): string {
 
 const COLUMNS: ColumnDef[] = [
     { key: "id", label: "No", sortable: true, width: "48px" },
-    { key: "name", label: "Name", sortable: true, width: "180px" },
+    { key: "name", label: "Zoom Name", sortable: true, width: "180px" },
     { key: "session", label: "Session", sortable: true, width: "110px" },
     { key: "backName", label: "Back Name", sortable: true, width: "130px" },
     { key: "jerseyNumber", label: "No.", sortable: true, width: "60px" },

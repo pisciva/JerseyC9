@@ -1,14 +1,26 @@
 import { json, readBody, setAdminCookie } from "./_shared.js";
 
+function normalizeCode(value) {
+  return String(value || "")
+    .trim()
+    .replace(/^["']|["']$/g, "")
+    .trim();
+}
+
 function resolveAdmin(code) {
-  const singleCode = process.env.ADMIN_ACCESS_CODE;
+  const singleCode = normalizeCode(process.env.ADMIN_ACCESS_CODE);
   if (singleCode && code === singleCode) {
     return { name: "Committee", codeLabel: "shared" };
   }
 
   const codeMapRaw = process.env.ADMIN_CODES_JSON;
   if (codeMapRaw) {
-    const codeMap = JSON.parse(codeMapRaw);
+    let codeMap = {};
+    try {
+      codeMap = JSON.parse(codeMapRaw);
+    } catch {
+      codeMap = {};
+    }
     const adminName = codeMap[code];
     if (adminName) {
       return { name: adminName, codeLabel: adminName };
@@ -26,7 +38,7 @@ export default async function handler(req, res) {
 
   try {
     const body = await readBody(req);
-    const code = String(body.code || "").trim();
+    const code = normalizeCode(body.code);
     const admin = resolveAdmin(code);
 
     if (!admin) {

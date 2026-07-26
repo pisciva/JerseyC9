@@ -8,6 +8,8 @@ export default function handler(req, res) {
 
   json(res, 200, {
     adminAccessCodeConfigured: Boolean(process.env.ADMIN_ACCESS_CODE || process.env.ADMIN_CODES_JSON),
+    adminSingleCodeConfigured: Boolean(process.env.ADMIN_ACCESS_CODE),
+    adminCodeMapConfigured: Boolean(process.env.ADMIN_CODES_JSON),
     supabaseUrlConfigured: Boolean(process.env.SUPABASE_URL),
     supabaseKeyConfigured: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
     blobTokenConfigured: Boolean(process.env.BLOB_READ_WRITE_TOKEN),

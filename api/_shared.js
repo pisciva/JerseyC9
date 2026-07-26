@@ -1,6 +1,8 @@
 import * as cookie from "cookie";
 
-const { parse, serialize } = cookie.default ?? cookie;
+const cookieApi = cookie.default ?? cookie;
+const parseCookie = cookieApi.parseCookie ?? cookieApi.parse;
+const stringifySetCookie = cookieApi.stringifySetCookie ?? cookieApi.serialize;
 
 const SESSION_COOKIE = "jd_admin";
 
@@ -44,7 +46,9 @@ export function readBody(req) {
 
 export function setAdminCookie(res, session) {
   const value = Buffer.from(JSON.stringify(session), "utf8").toString("base64url");
-  res.setHeader("Set-Cookie", serialize(SESSION_COOKIE, value, {
+  res.setHeader("Set-Cookie", stringifySetCookie({
+    name: SESSION_COOKIE,
+    value,
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -54,7 +58,9 @@ export function setAdminCookie(res, session) {
 }
 
 export function clearAdminCookie(res) {
-  res.setHeader("Set-Cookie", serialize(SESSION_COOKIE, "", {
+  res.setHeader("Set-Cookie", stringifySetCookie({
+    name: SESSION_COOKIE,
+    value: "",
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -64,7 +70,7 @@ export function clearAdminCookie(res) {
 }
 
 export function getAdminSession(req) {
-  const cookies = parse(req.headers.cookie || "");
+  const cookies = parseCookie(req.headers.cookie || "");
   const raw = cookies[SESSION_COOKIE];
   if (!raw) return null;
   try {

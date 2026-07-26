@@ -862,9 +862,7 @@ export default function JerseyDashboard() {
 
             <div className="jd-wrap">
                 {loadState === "loading" && (
-                    <div className="jd-glass jd-state">
-                        <Loader2 size={16} className="jd-spin" /> Loading {DATA_PATH}...
-                    </div>
+                    <div className="jd-glass jd-state"></div>
                 )}
 
                 {loadState === "error" && (

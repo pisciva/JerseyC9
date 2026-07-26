@@ -11,6 +11,10 @@ create table if not exists public.distribution_records (
 
 alter table public.distribution_records enable row level security;
 
+grant select on public.distribution_records to anon;
+grant select on public.distribution_records to authenticated;
+grant select, insert, update on public.distribution_records to service_role;
+
 drop policy if exists "Public can read distribution status" on public.distribution_records;
 create policy "Public can read distribution status"
 on public.distribution_records

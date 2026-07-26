@@ -31,6 +31,7 @@ const DATA_PATH = "/data/orders.xlsx";
 const ADMIN_STORAGE_KEY = "jd-admin-session";
 const RECORDS_STORAGE_KEY = "jd-distribution-records";
 const CHANNEL_NAME = "jd-distribution-sync";
+const LOCAL_FALLBACK_ENABLED = import.meta.env.DEV;
 
 export interface JerseyOrder {
     id: number;
@@ -393,10 +394,16 @@ function writeLocalRecords(records: Record<string, DistributionRecord>) {
 async function loadDistributionRecords(): Promise<Record<string, DistributionRecord>> {
     try {
         const res = await fetch("/api/distribution", { credentials: "include" });
-        if (!res.ok) throw new Error("Remote distribution API unavailable.");
+        if (!res.ok) {
+            const payload = await res.json().catch(() => null) as { error?: string } | null;
+            throw new Error(payload?.error || "Remote distribution API unavailable.");
+        }
         const payload = await res.json() as { records?: DistributionRecord[] };
         return recordsFromArray(payload.records ?? []);
-    } catch {
+    } catch (error) {
+        if (!LOCAL_FALLBACK_ENABLED) {
+            throw error instanceof Error ? error : new Error("Remote distribution API unavailable.");
+        }
         return readLocalRecords();
     }
 }
@@ -409,10 +416,16 @@ async function saveDistributionRecord(record: DistributionRecord): Promise<Distr
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(record),
         });
-        if (!res.ok) throw new Error("Remote distribution save failed.");
+        if (!res.ok) {
+            const payload = await res.json().catch(() => null) as { error?: string } | null;
+            throw new Error(payload?.error || "Remote distribution save failed.");
+        }
         const payload = await res.json() as { record?: DistributionRecord };
         return payload.record ?? record;
-    } catch {
+    } catch (error) {
+        if (!LOCAL_FALLBACK_ENABLED) {
+            throw error instanceof Error ? error : new Error("Remote distribution save failed.");
+        }
         const records = readLocalRecords();
         records[record.orderKey] = record;
         writeLocalRecords(records);
@@ -431,7 +444,10 @@ async function uploadPhoto(orderKey: string, dataUrl: string): Promise<string> {
         if (!res.ok) throw new Error("Photo upload failed.");
         const payload = await res.json() as { url?: string };
         return payload.url ?? dataUrl;
-    } catch {
+    } catch (error) {
+        if (!LOCAL_FALLBACK_ENABLED) {
+            throw error instanceof Error ? error : new Error("Photo upload failed.");
+        }
         return dataUrl;
     }
 }
@@ -451,7 +467,7 @@ async function loginAdmin(code: string): Promise<AdminSession> {
         return payload.session;
     } catch (error) {
         const fallbackCode = import.meta.env.VITE_ADMIN_CODE || "scimutdanlucu";
-        if (trimmed === fallbackCode) {
+        if (LOCAL_FALLBACK_ENABLED && trimmed === fallbackCode) {
             return { name: "Committee", codeLabel: "local", loginAt: new Date().toISOString() };
         }
         throw error instanceof Error ? error : new Error("Invalid access code.");

@@ -30,6 +30,15 @@ function resolveAdmin(code) {
   return null;
 }
 
+function readQueryCode(req) {
+  try {
+    const url = new URL(req.url || "", "https://local.invalid");
+    return normalizeCode(url.searchParams.get("code"));
+  } catch {
+    return "";
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     json(res, 405, { error: "Method not allowed." });
@@ -38,11 +47,25 @@ export default async function handler(req, res) {
 
   try {
     const body = await readBody(req);
-    const code = normalizeCode(body.code);
+    const headerCode = normalizeCode(req.headers["x-admin-code"]);
+    const queryCode = readQueryCode(req);
+    const bodyCode = normalizeCode(body.code);
+    const code = bodyCode || headerCode || queryCode;
     const admin = resolveAdmin(code);
 
     if (!admin) {
-      json(res, 401, { error: "Invalid access code." });
+      json(res, 401, {
+        error: "Invalid access code.",
+        debug: {
+          bodyCodeLength: bodyCode.length,
+          headerCodeLength: headerCode.length,
+          queryCodeLength: queryCode.length,
+          receivedCodeLength: code.length,
+          envCodeLength: normalizeCode(process.env.ADMIN_ACCESS_CODE).length,
+          receivedCodeMatchesExpected: code === "scimutdanlucu",
+          envCodeMatchesExpected: normalizeCode(process.env.ADMIN_ACCESS_CODE) === "scimutdanlucu",
+        },
+      });
       return;
     }
 

@@ -458,7 +458,10 @@ async function loginAdmin(code: string): Promise<AdminSession> {
         const res = await fetch("/api/admin-login", {
             method: "POST",
             credentials: "include",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "x-admin-code": trimmed,
+            },
             body: JSON.stringify({ code: trimmed }),
         });
         if (!res.ok) throw new Error("Invalid access code.");

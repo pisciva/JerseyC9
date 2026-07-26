@@ -499,6 +499,7 @@ export default function JerseyDashboard() {
     const [records, setRecords] = useState<Record<string, DistributionRecord>>({});
     const [loadState, setLoadState] = useState<LoadState>("loading");
     const [error, setError] = useState<string>("");
+    const [distributionError, setDistributionError] = useState("");
     const [search, setSearch] = useState("");
     const [sessionFilter, setSessionFilter] = useState("All");
     const [orderTypeFilter, setOrderTypeFilter] = useState("All");
@@ -543,16 +544,20 @@ export default function JerseyDashboard() {
         async function load() {
             setLoadState("loading");
             setError("");
+            setDistributionError("");
             try {
-                const [ordersResult, recordsResult] = await Promise.all([
-                    fetch(DATA_PATH).then(async res => {
-                        if (!res.ok) throw new Error(`File not found at ${DATA_PATH} (status ${res.status}).`);
-                        const buffer = await res.arrayBuffer();
-                        const xlsx = await import("xlsx");
-                        return parseWorkbookToOrders(xlsx.read(buffer, { type: "array" }), xlsx.utils);
-                    }),
-                    loadDistributionRecords(),
-                ]);
+                const res = await fetch(DATA_PATH);
+                if (!res.ok) throw new Error(`File not found at ${DATA_PATH} (status ${res.status}).`);
+                const buffer = await res.arrayBuffer();
+                const xlsx = await import("xlsx");
+                const ordersResult = parseWorkbookToOrders(xlsx.read(buffer, { type: "array" }), xlsx.utils);
+                let recordsResult: Record<string, DistributionRecord> = {};
+
+                try {
+                    recordsResult = await loadDistributionRecords();
+                } catch (syncError) {
+                    setDistributionError(syncError instanceof Error ? syncError.message : "Distribution sync unavailable.");
+                }
 
                 if (!cancelled) {
                     setOrders(ordersResult);
@@ -574,7 +579,14 @@ export default function JerseyDashboard() {
     }, []);
 
     useEffect(() => {
-        const sync = async () => setRecords(await loadDistributionRecords());
+        const sync = async () => {
+            try {
+                setRecords(await loadDistributionRecords());
+                setDistributionError("");
+            } catch (syncError) {
+                setDistributionError(syncError instanceof Error ? syncError.message : "Distribution sync unavailable.");
+            }
+        };
         const timer = window.setInterval(sync, 5000);
         window.addEventListener("storage", sync);
         window.addEventListener("jd-distribution-local-sync", sync);
@@ -929,6 +941,13 @@ export default function JerseyDashboard() {
                         <div className="jd-count">
                             <strong>{filtered.length}</strong> of {stats.total} learners
                         </div>
+
+                        {distributionError && (
+                            <div className="jd-sync-warning">
+                                <AlertCircle size={15} />
+                                <span>Distribution sync is offline: {distributionError}</span>
+                            </div>
+                        )}
 
                         <div className={adminSession && selectedOrder ? "jd-layout is-panel-open" : "jd-layout"}>
                             <div className="jd-glass">

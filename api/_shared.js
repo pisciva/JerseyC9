@@ -11,6 +11,17 @@ export function json(res, status, payload) {
 }
 
 export function readBody(req) {
+  if (req.body) {
+    if (typeof req.body === "string") {
+      try {
+        return Promise.resolve(JSON.parse(req.body));
+      } catch {
+        return Promise.reject(new Error("Invalid JSON body."));
+      }
+    }
+    return Promise.resolve(req.body);
+  }
+
   return new Promise((resolve, reject) => {
     let raw = "";
     req.on("data", chunk => {

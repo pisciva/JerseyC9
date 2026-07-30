@@ -5,6 +5,7 @@ const parseCookie = cookieApi.parseCookie ?? cookieApi.parse;
 const stringifySetCookie = cookieApi.stringifySetCookie ?? cookieApi.serialize;
 
 const SESSION_COOKIE = "jd_admin";
+const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 7;
 
 export function json(res, status, payload) {
   res.statusCode = status;
@@ -53,7 +54,7 @@ export function setAdminCookie(res, session) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 12,
+    maxAge: ADMIN_SESSION_MAX_AGE,
   }));
 }
 
@@ -83,7 +84,7 @@ export function getAdminSession(req) {
 export function requireAdmin(req, res) {
   const session = getAdminSession(req);
   if (!session) {
-    json(res, 401, { error: "Unauthorized." });
+    json(res, 401, { error: "Admin session expired. Please log in again." });
     return null;
   }
   return session;

@@ -87,7 +87,7 @@ type SortKey =
     | "sleeve"
     | "color";
 
-type LoadState = "loading" | "ready" | "error";
+type LoadState = "" | "ready" | "error";
 type StatusFilter = "All" | "PickedUp" | "Pending";
 type SaveState = "idle" | "saving" | "error" | "saved";
 
@@ -441,7 +441,10 @@ async function uploadPhoto(orderKey: string, dataUrl: string): Promise<string> {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ orderKey, image: dataUrl }),
         });
-        if (!res.ok) throw new Error("Photo upload failed.");
+        if (!res.ok) {
+            const payload = await res.json().catch(() => null) as { error?: string } | null;
+            throw new Error(payload?.error || "Photo upload failed.");
+        }
         const payload = await res.json() as { url?: string };
         return payload.url ?? dataUrl;
     } catch (error) {
@@ -500,7 +503,7 @@ function allChecked(checklist: DistributionChecklist): boolean {
 export default function JerseyDashboard() {
     const [orders, setOrders] = useState<JerseyOrder[]>([]);
     const [records, setRecords] = useState<Record<string, DistributionRecord>>({});
-    const [loadState, setLoadState] = useState<LoadState>("loading");
+    const [loadState, setLoadState] = useState<LoadState>("");
     const [error, setError] = useState<string>("");
     const [distributionError, setDistributionError] = useState("");
     const [search, setSearch] = useState("");
@@ -545,7 +548,7 @@ export default function JerseyDashboard() {
         let cancelled = false;
 
         async function load() {
-            setLoadState("loading");
+            setLoadState("");
             setError("");
             setDistributionError("");
             try {
@@ -861,7 +864,7 @@ export default function JerseyDashboard() {
             <div className="jd-bg" />
 
             <div className="jd-wrap">
-                {loadState === "loading" && (
+                {loadState === "" && (
                     <div className="jd-glass jd-state"></div>
                 )}
 

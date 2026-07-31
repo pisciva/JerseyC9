@@ -24,42 +24,15 @@ body {
     linear-gradient(135deg, #f8fbff 0%, #eef4f8 100%);
 }
 
-.retired-card {
+.retired-content {
   width: min(100%, 620px);
   text-align: center;
-  padding: 42px 36px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.86);
-  box-shadow: 0 24px 70px rgba(23, 35, 61, 0.13);
-  backdrop-filter: blur(20px);
 }
 
-.retired-icon {
-  width: 70px;
-  height: 70px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #e8f7f1;
-  color: #0f8a5f;
-  margin-bottom: 18px;
-}
-
-.retired-kicker {
-  margin: 0 0 10px;
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #64748b;
-}
-
-.retired-card h1 {
+.retired-content h1 {
   margin: 0;
-  font-size: clamp(30px, 5vw, 46px);
-  line-height: 1.08;
+  font-size: clamp(22px, 4vw, 32px);
+  line-height: 1.2;
   letter-spacing: 0;
 }
 
@@ -84,8 +57,4 @@ body {
     padding: 18px;
   }
 
-  .retired-card {
-    padding: 34px 22px;
-    border-radius: 20px;
-  }
 }
